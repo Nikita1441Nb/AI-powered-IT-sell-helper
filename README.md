@@ -1,34 +1,50 @@
-# whatsapp-bot
+# WA-LeadCRM 🚀
 
-A minimal Electron application with JavaScript
+Десктопное приложение на базе Electron.js для поиска потенциальных клиентов, управления рассылками в WhatsApp и ведения локальной CRM-базы. Приложение интегрировано с искусственным интеллектом для автоматического анализа переписок и выявления потребностей клиентов.
 
-## Recommended IDE Setup
+## 🌟 Основной функционал
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+* Умная рассылка WhatsApp: отправка сообщений через Green API с умным ИИ помощником(Gemini 3.1 Flash)
+* Локальная CRM-система: Хранение истории клиентов в локальной базе SQLite. Распределение по статусам (Новые, В ожидании, Заинтересованы, Вероятен ТЗ и т.д.).
+* AI-Аналитика чатов: Интеграция с Google Gemini AI для:
+    * Оценки вероятности получения ТЗ (от 0 до 100%).
+    * Анализа "болей" клиента и уровня заинтересованности.
+    * Генерации умных подсказок для следующего ответа.
+    * Извлечения номеров телефонов из сайтов и соцсетей компаний.
 
-## Project Setup
+## 🛠 Технологии
 
-### Install
+* Frontend: HTML/CSS, JavaScript (Vanilla)
+* Backend / Desktop: Node.js, Electron
+* База данных: better-sqlite3 (локальное хранилище)
+* API: Green API (WhatsApp), Google Generative AI (Gemini 3.1 Flash)
 
-```bash
-$ npm install
-```
+## ⚙️ Установка и запуск
 
-### Development
+1. Склонируйте репозиторий:
+   ```bash
+   git clone [https://github.com/ВАШ_НИК/ИМЯ_РЕПОЗИТОРИЯ.git](https://github.com/ВАШ_НИК/ИМЯ_РЕПОЗИТОРИЯ.git)
+   cd ИМЯ_РЕПОЗИТОРИЯ
+Установите зависимости:
+Bash
+npm install
+Настройте переменные окружения:
+Откройте файл src/main/config.js и укажите ваши ключи:
 
-```bash
-$ npm run dev
-```
+GREEN_API_ID=ваш_id_инстанса
+GREEN_API_TOKEN=ваш_токен
+GREEN_API_HOST=[https://7103.api.greenapi.com](https://7103.api.greenapi.com)
+GREEN_API_URL=[https://7103.api.greenapi.com](https://7103.api.greenapi.com)
+GEMINI_API_KEY=ваш_ключ_gemini
 
-### Build
+Запустите проект в режиме разработки:
 
-```bash
-# For windows
-$ npm run build:win
+Bash
+npm run dev
+Сборка готового приложения (exe):
 
-# For macOS
-$ npm run build:mac
+Bash
+npm run build
 
-# For Linux
-$ npm run build:linux
-```
+⚠️ Важное предупреждение
+Для работы мессенджера требуется активная подписка на Green API. Рекомендуется соблюдать лимиты рассылок WhatsApp, чтобы избежать блокировки номера. Разработчик не несет ответственности за заблокированные аккаунты.
