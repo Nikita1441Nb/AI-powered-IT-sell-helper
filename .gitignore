@@ -1,0 +1,14 @@
+.DS_Store
+.eslintcache
+*.log*
+# Зависимости
+node_modules/
+
+# База данных с контактами и чатами
+database.db
+database.db-journal
+
+# Папки сборки Electron
+build/
+out/
+dist/

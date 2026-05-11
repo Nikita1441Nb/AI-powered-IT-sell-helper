@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>WA Sender v1.0</title>
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Боковая панель -->
+    <aside class="sidebar">
+      <div class="logo">WA-BOT</div>
+      <nav>
+        <div class="nav-dropdown open">
+          <button class="nav-btn dropdown-toggle active" data-tab="tab-parser">
+            Общая база <span class="arrow">▼</span>
+          </button>
+          <div class="dropdown-content">
+            <button class="sub-nav-btn active" id="btn-show-parser">Парсинг (2GIS)</button>
+            <button class="sub-nav-btn" id="btn-show-wa">WhatsApp (Чаты)</button>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-btn dropdown-toggle" data-tab="tab-crm">
+            CRM (Категории) <span class="arrow">▼</span>
+          </button>
+          <div class="dropdown-content" id="crm-submenu">
+            <button class="sub-nav-btn" data-type="1">Новые</button>
+            <button class="sub-nav-btn" data-type="2">Ожидание</button>
+            <button class="sub-nav-btn" data-type="3">Портфолио</button>
+            <button class="sub-nav-btn" data-type="4">Заинтересованы</button>
+            <button class="sub-nav-btn" data-type="5">Напомнить</button>
+            <button class="sub-nav-btn" data-type="6">Вероятен ТЗ</button>
+            <button class="sub-nav-btn" data-type="7">Дали ТЗ</button>
+            <button class="sub-nav-btn" data-type="8" style="color: #f1c40f;">★ Избранное</button>
+          </div>
+        </div>
+        <button class="nav-btn" data-tab="tab-settings">Настройка сообщения</button>
+      </nav>
+      <div class="status-bar">
+        <span>Status: <strong id="api-status">Disconnected</strong></span>
+      </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="content">
+      
+      <!-- ТАБ: ПАРСИНГ И ТАБЛИЦА -->
+      <section id="tab-parser" class="tab-content active">
+        <div class="toolbar">
+          <input type="text" placeholder="Ключевое слово или ссылка 2GIS..." id="parser-url">
+          <button class="btn-primary">Начать парсинг</button>
+          <button id="btn-import-csv" class="btn-secondary" style="margin-left: 10px;">Импорт CSV</button>
+          <button id="btn-ai-extract" class="btn-secondary" style="margin-left: 10px; background: #6a1b9a;">AI Номера</button>
+          <button id="btn-sync-wa" class="btn-secondary" style="margin-left: 10px; background: #005c4b;">Синхрон чатов</button>
+          <button id="btn-sort" class="btn-secondary" style="margin-left: 10px;">⇅ Сортировка</button>
+          <button id="btn-add-manual" class="btn-secondary" style="margin-left: 10px; background: #28a745;">+ Контакт</button>
+        </div>
+        
+        <table class="data-table">
+          <thead>
+            <tr id="table-headers">
+              <th>Компания / Имя</th>
+              <th>Контакты</th>
+              <th>Категории (1-7)</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+          <div class="pagination-container">
+          <button id="prev-page">Назад</button>
+          <span id="page-info">Загрузка...</span>
+          <button id="next-page">Вперед</button>
+        </div>
+        </div>
+      </section>
+
+      <!-- ТАБ: CRM ПО КАТЕГОРИЯМ -->
+      <section id="tab-crm" class="tab-content">
+        <div class="crm-filter-bar">
+          <button class="filter-btn active" data-type="all">Все</button>
+          <button class="filter-btn" data-type="1">Новые</button>
+          <button class="filter-btn" data-type="2">Ожидание</button>
+          <button class="filter-btn" data-type="3">Портфолио</button>
+          <button class="filter-btn" data-type="4">Заинтересованы</button>
+          <button class="filter-btn" data-type="5">Напомнить</button>
+          <button class="filter-btn" data-type="6">Вероятен ТЗ</button>
+          <button class="filter-btn" data-type="7">Дали ТЗ</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Компания</th>
+              <th>Контакты</th>
+              <th>Тип (JSON)</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody id="crm-table-body"></tbody>
+        </table>
+      </section>
+
+      <!-- ТАБ: НАСТРОЙКА СООБЩЕНИЯ -->
+      <section id="tab-settings" class="tab-content">
+        <h2>Настройка рассылки</h2>
+        <div class="template-box">
+          <label>Шаблон сообщения:</label>
+          <textarea id="msg-template" placeholder="Привет, {{name}}! Предлагаем вам..."></textarea>
+          <p class="hint">Доступные переменные: <code>{{name}}</code>, <code>{{phone}}</code></p>
+        </div>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label>Пауза между пачками (мин):</label>
+            <input type="number" value="30">
+          </div>
+          <div class="setting-item">
+            <label>Сообщений в пачке:</label>
+            <input type="number" value="10">
+          </div>
+        </div>
+        <button class="btn-start">ЗАПУСТИТЬ РАССЫЛКУ</button>
+      </section>
+
+    </main>
+  </div>
+
+<dialog id="contactModal" class="contact-modal">
+  <div class="modal-header">
+    <h3 id="modalName">Имя компании</h3>
+    <button class="close-btn" onclick="document.getElementById('contactModal').close()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Телефон:</strong> <span id="modalPhone"></span></p>
+    <p><strong>Адрес:</strong> <span id="modalAddress"></span></p>
+    <p><strong>Сайт:</strong> <a href="#" id="modalWebsite" target="_blank"></a></p>
+    <p><strong>Описание:</strong></p>
+    <div id="modalDescription" class="modal-description"></div>
+  </div>
+</dialog>
+
+<dialog id="addContactModal" class="contact-modal" style="width: 300px;">
+  <div class="modal-header">
+    <h3>Новый контакт</h3>
+    <button class="close-btn" onclick="document.getElementById('addContactModal').close()">&times;</button>
+  </div>
+  <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
+    <input type="text" id="manual-name" placeholder="Имя / Компания" style="padding: 10px; background: #2d2d2d; border: 1px solid #444; color: white; border-radius: 4px;">
+    <input type="text" id="manual-phone" placeholder="77071234567" style="padding: 10px; background: #2d2d2d; border: 1px solid #444; color: white; border-radius: 4px;">
+    <button id="btn-save-manual" class="btn-primary">Сохранить и открыть чат</button>
+  </div>
+</dialog>
+
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
